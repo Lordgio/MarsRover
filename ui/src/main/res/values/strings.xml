@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="select_instructions_list_title">Select from available instructions</string>
+    <string name="select_instructions_custom_title">Or create your own</string>
+    <string name="select_instructions_custom_button">Go custom!</string>
+    <string name="generic_error_message">Ups! Looks like we had a bit of an issue here</string>
+    <string name="generic_error_button">Go back</string>
+</resources>
