@@ -5,7 +5,10 @@ import arrow.retrofit.adapter.either.networkhandling.CallError
 import arrow.retrofit.adapter.either.networkhandling.HttpError
 import arrow.retrofit.adapter.either.networkhandling.IOError
 import arrow.retrofit.adapter.either.networkhandling.UnexpectedCallError
+import dev.jorgeroldan.marsrover.data.model.InstructionItemApi
 import dev.jorgeroldan.marsrover.data.remote.MarsRoverApi
+import dev.jorgeroldan.marsrover.domain.mapper.toRoverDirection
+import dev.jorgeroldan.marsrover.domain.mapper.toRoverMovement
 import dev.jorgeroldan.marsrover.domain.model.Coordinates
 import dev.jorgeroldan.marsrover.domain.model.Failure
 import dev.jorgeroldan.marsrover.domain.model.Instruction
@@ -27,7 +30,7 @@ class MarsRoverRepositoryImpl(
     override suspend fun getInstruction(instructionPath: String): Either<Failure, InstructionItem> {
 
         return remote.getInstruction(instructionPath)
-            .map { item -> InstructionItem(Coordinates(1, 1), Coordinates(1, 2), RoverDirection.EAST, "") }
+            .map { item -> item.toDomainModel() }
             .mapLeft { error -> error.mapError() }
     }
 
@@ -37,5 +40,15 @@ class MarsRoverRepositoryImpl(
             is IOError -> Failure.IOFailure(this.cause.message ?: "")
             is UnexpectedCallError -> Failure.UnexpectedFailure(this.cause.message ?: "")
         }
+    }
+
+    private fun InstructionItemApi.toDomainModel(): InstructionItem {
+        return InstructionItem(
+            topRightCorner = Coordinates(topRightCorner.x, topRightCorner.y),
+            roverPosition = Coordinates(roverPosition.x, roverPosition.y),
+            roverDirection = roverDirection.toRoverDirection(),
+            encodedMovements = movements,
+            movements = movements.toRoverMovement(),
+        )
     }
 }
