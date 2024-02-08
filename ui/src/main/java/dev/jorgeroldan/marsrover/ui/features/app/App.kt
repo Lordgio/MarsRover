@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dev.jorgeroldan.marsrover.ui.features.instructions.SelectInstructionsScreen
+import dev.jorgeroldan.marsrover.ui.features.viewer.InstructionsViewerScreen
 import dev.jorgeroldan.marsrover.ui.theme.MarsRoverTheme
 
 @Composable
@@ -27,8 +28,16 @@ fun App() {
                 composable(Screens.SelectInstructionsScreen.route) {
                     SelectInstructionsScreen(
                         modifier = Modifier.fillMaxSize(),
-                        onInstructionSelected = {},
+                        onInstructionSelected = { instruction ->
+                            navController.navigate(Screens.InstructionsViewerScreen.route + "/${instruction.urlPath}") },
                         onCreateInstructionsSelected = {}
+                    )
+                }
+                composable(Screens.InstructionsViewerScreen.route + "/{path}") { backStackEntry ->
+                    InstructionsViewerScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        instructionPath = backStackEntry.arguments?.getString("path") ?: "",
+                        onBack = { navController.popBackStack() }
                     )
                 }
             }
@@ -38,4 +47,5 @@ fun App() {
 
 sealed class Screens(val route: String) {
     data object SelectInstructionsScreen : Screens("selectInstructions")
+    data object InstructionsViewerScreen : Screens("instructionsViewer")
 }
