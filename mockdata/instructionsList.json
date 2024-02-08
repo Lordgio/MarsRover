@@ -5,18 +5,18 @@
   },
   {
     "name": "Second",
-    "urlPath": ""
+    "urlPath": "instructions2"
   },
   {
     "name": "Third",
-    "urlPath": ""
+    "urlPath": "instructions3"
   },
   {
     "name": "Fourth",
-    "urlPath": ""
+    "urlPath": "instructions4"
   },
   {
-    "name": "Fifth",
-    "urlPath": ""
+    "name": "Not found instructions",
+    "urlPath": "instructions5"
   }
 ]
