@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import dev.jorgeroldan.marsrover.data.di.DataModule
 import dev.jorgeroldan.marsrover.ui.di.UiModule
 import dev.jorgeroldan.marsrover.ui.features.app.App
 import org.koin.android.ext.koin.androidContext
@@ -29,7 +30,7 @@ class MainActivity : ComponentActivity() {
             startKoin {
                 androidLogger(if (BuildConfig.DEBUG) Level.DEBUG else Level.NONE)
                 androidContext(context)
-                modules(UiModule.module)
+                modules(DataModule.module, UiModule.module)
             }
         }
     }

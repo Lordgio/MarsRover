@@ -1,22 +1,22 @@
 [
   {
     "name": "Default instructions",
-    "url": ""
+    "urlPath": "instructions1"
   },
   {
     "name": "Second",
-    "url": ""
+    "urlPath": ""
   },
   {
     "name": "Third",
-    "url": ""
+    "urlPath": ""
   },
   {
     "name": "Fourth",
-    "url": ""
+    "urlPath": ""
   },
   {
     "name": "Fifth",
-    "url": ""
+    "urlPath": ""
   }
 ]
