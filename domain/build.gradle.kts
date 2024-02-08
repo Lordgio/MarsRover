@@ -7,8 +7,6 @@ kotlin {
 }
 
 dependencies {
-    // Internal modules
-    implementation(project(":data"))
 
     // Kotlin
     implementation(libs.coroutines.core)

@@ -8,6 +8,9 @@ kotlin {
 }
 
 dependencies {
+    // Internal modules
+    implementation(project(":domain"))
+
     // DI
     implementation(libs.koin.core)
 
@@ -19,6 +22,11 @@ dependencies {
 
     // Functional programming
     implementation(libs.arrow.core)
+
+    // HTTP handling
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.serialization)
+    implementation(libs.retrofit.adapter.either)
 
     // Testing
     testImplementation(libs.mockk.agent)
