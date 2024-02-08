@@ -85,7 +85,7 @@ private fun SelectInstructionsScreenContent(
             contentPadding = PaddingValues(vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(items, key = { it.url }) {
+            items(items) {
                 InstructionCard(
                     instruction = it,
                     onInstructionSelected = onInstructionSelected
