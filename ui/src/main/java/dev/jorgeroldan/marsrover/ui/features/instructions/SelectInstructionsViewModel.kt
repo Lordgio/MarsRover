@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.jorgeroldan.marsrover.domain.model.Instruction
 import dev.jorgeroldan.marsrover.domain.usecase.GetInstructionsListUseCase
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -27,7 +29,9 @@ class SelectInstructionsViewModel(
 
         useCase.invoke().fold(
             ifLeft = { savedStateHandle[SELECT_INSTRUCTIONS_STATE] = SelectInstructionsState.Error },
-            ifRight = { items -> savedStateHandle[SELECT_INSTRUCTIONS_STATE] = SelectInstructionsState.Data(items) }
+            ifRight = {
+                items -> savedStateHandle[SELECT_INSTRUCTIONS_STATE] = SelectInstructionsState.Data(items.toImmutableList())
+            }
         )
     }
 
@@ -37,7 +41,7 @@ class SelectInstructionsViewModel(
         @Parcelize
         data object Loading : SelectInstructionsState, Parcelable
         @Parcelize
-        data class Data(val items: @RawValue List<Instruction>): SelectInstructionsState, Parcelable
+        data class Data(val items: @RawValue ImmutableList<Instruction>): SelectInstructionsState, Parcelable
         @Parcelize
         data object Error : SelectInstructionsState, Parcelable
     }

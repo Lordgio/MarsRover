@@ -51,6 +51,7 @@ dependencies {
 
     // Kotlin
     implementation(libs.coroutines.android)
+    implementation(libs.kotlinx.immutable)
 
     // Android
     implementation(libs.androidx.core.ktx)
@@ -84,4 +85,5 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    lintChecks(libs.compose.lint.checks)
 }

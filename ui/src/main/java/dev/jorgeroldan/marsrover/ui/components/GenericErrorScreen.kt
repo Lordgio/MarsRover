@@ -19,10 +19,10 @@ import dev.jorgeroldan.marsrover.ui.R
 
 @Composable
 fun GenericErrorScreen(
+    modifier: Modifier = Modifier,
     errorMessage: String = stringResource(id = R.string.generic_error_message),
     errorButton: String = stringResource(id = R.string.generic_error_button),
     onBackClick: () -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
 
     Column(

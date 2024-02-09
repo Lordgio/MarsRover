@@ -48,13 +48,16 @@ import dev.jorgeroldan.marsrover.ui.components.GridCanvas
 import dev.jorgeroldan.marsrover.ui.theme.MarsRoverTheme
 import dev.jorgeroldan.marsrover.ui.util.PreviewMockData
 import dev.jorgeroldan.marsrover.ui.util.ScreenPreview
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun InstructionsViewerScreen(
-    modifier: Modifier = Modifier,
     instructionPath: String,
+    modifier: Modifier = Modifier,
     onBack: () -> Unit,
 ) {
 
@@ -98,7 +101,7 @@ private fun InstructionsViewerScreenContent(
         }
         GenericInfoCard(
             sectionTitle = stringResource(id = R.string.instructions_viewer_preconditions_title),
-            items = listOf(
+            items = persistentListOf(
                 "Grid size:" to "${report.initial.topRightCorner.x} x ${report.initial.topRightCorner.y}",
                 "Rover position:" to "${report.initial.roverPosition.x} x ${report.initial.roverPosition.y}",
                 "Rover orientation:" to "${report.initial.roverDirection}",
@@ -107,7 +110,7 @@ private fun InstructionsViewerScreenContent(
         )
         GenericInfoCard(
             sectionTitle = stringResource(id = R.string.instructions_viewer_report_title),
-            items = listOf(
+            items = persistentListOf(
                 "Rover position:" to "${report.finalPosition.x} x ${report.finalPosition.y}",
                 "Rover orientation:" to "${report.finalOrientation}",
                 "Final position:" to report.finalResolution
@@ -118,7 +121,7 @@ private fun InstructionsViewerScreenContent(
             ReplayMovements(
                 columns = report.initial.topRightCorner.y,
                 rows = report.initial.topRightCorner.x,
-                movements = report.steps
+                movements = report.steps.toImmutableList()
             )
         }
     }
@@ -127,7 +130,7 @@ private fun InstructionsViewerScreenContent(
 @Composable
 private fun GenericInfoCard(
     sectionTitle: String,
-    items: List<Pair<String, String>>,
+    items: ImmutableList<Pair<String, String>>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -166,7 +169,7 @@ private fun GenericInfoCard(
 private fun ReplayMovements(
     columns: Int,
     rows: Int,
-    movements: List<MovementStep>,
+    movements: ImmutableList<MovementStep>,
     modifier: Modifier = Modifier
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "")

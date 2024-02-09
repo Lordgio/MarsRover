@@ -13,10 +13,12 @@ import dev.jorgeroldan.marsrover.ui.features.viewer.InstructionsViewerScreen
 import dev.jorgeroldan.marsrover.ui.theme.MarsRoverTheme
 
 @Composable
-fun App() {
+fun App(
+    modifier: Modifier = Modifier
+) {
     MarsRoverTheme {
         Surface(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
             val navController = rememberNavController()

@@ -26,13 +26,14 @@ import androidx.compose.ui.unit.sp
 fun GridCanvas(
     rows: Int,
     columns: Int,
+    modifier: Modifier = Modifier,
     onDrawCell: DrawScope.(row: Int, column: Int, size: Float, color: Color) -> Unit,
 ) {
     val textMeasurer = rememberTextMeasurer()
     val drawColor = MaterialTheme.colorScheme.onBackground
     val localDensity = LocalDensity.current
     var heightModifier by remember { mutableStateOf(0.dp) }
-    Canvas(modifier = Modifier
+    Canvas(modifier = modifier
         .fillMaxWidth()
         .requiredHeight(heightModifier)
     ) {

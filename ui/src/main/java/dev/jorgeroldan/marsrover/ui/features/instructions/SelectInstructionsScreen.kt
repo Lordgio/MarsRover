@@ -33,12 +33,14 @@ import dev.jorgeroldan.marsrover.ui.components.FullScreenLoader
 import dev.jorgeroldan.marsrover.ui.components.GenericErrorScreen
 import dev.jorgeroldan.marsrover.ui.util.ComponentPreview
 import dev.jorgeroldan.marsrover.ui.util.PreviewMockData
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SelectInstructionsScreen(
-    modifier: Modifier = Modifier,
     onInstructionSelected: (Instruction) -> Unit,
+    modifier: Modifier = Modifier,
     onCreateInstructionsSelected: () -> Unit,
 ) {
 
@@ -63,9 +65,9 @@ fun SelectInstructionsScreen(
 
 @Composable
 private fun SelectInstructionsScreenContent(
-    items: List<Instruction>,
-    modifier: Modifier = Modifier,
+    items: ImmutableList<Instruction>,
     onInstructionSelected: (Instruction) -> Unit,
+    modifier: Modifier = Modifier,
     onCreateInstructionsSelected: () -> Unit,
 ) {
 
@@ -135,7 +137,7 @@ private fun SelectInstructionsScreenContentPreview() {
 
     MarsRoverTheme {
         SelectInstructionsScreenContent(
-            items = PreviewMockData.instructionList,
+            items = PreviewMockData.instructionList.toImmutableList(),
             onInstructionSelected = {},
             onCreateInstructionsSelected = {}
         )

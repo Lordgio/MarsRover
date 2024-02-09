@@ -18,7 +18,7 @@ dependencies {
     implementation(libs.coroutines.core)
 
     // Serialization
-    implementation(libs.kotlin.serialization.json)
+    implementation(libs.kotlinx.serialization.json)
 
     // Functional programming
     implementation(libs.arrow.core)
