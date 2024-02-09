@@ -4,8 +4,8 @@
     "y": 5
   },
   "roverPosition": {
-    "x": 10,
-    "y": 5
+    "x": 5,
+    "y": 10
   },
   "roverDirection": "S",
   "movements": "MMMMMMRMMMMMRMMM"
