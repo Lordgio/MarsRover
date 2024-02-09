@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.jorgeroldan.marsrover.domain.model.Instruction
 import dev.jorgeroldan.marsrover.domain.usecase.GetInstructionsListUseCase
-import dev.jorgeroldan.marsrover.ui.util.PreviewMockData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize

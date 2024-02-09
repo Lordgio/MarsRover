@@ -13,7 +13,6 @@ import dev.jorgeroldan.marsrover.domain.model.Coordinates
 import dev.jorgeroldan.marsrover.domain.model.Failure
 import dev.jorgeroldan.marsrover.domain.model.Instruction
 import dev.jorgeroldan.marsrover.domain.model.InstructionItem
-import dev.jorgeroldan.marsrover.domain.model.RoverDirection
 import dev.jorgeroldan.marsrover.domain.repository.MarsRoverRepository
 
 class MarsRoverRepositoryImpl(
