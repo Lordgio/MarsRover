@@ -13,5 +13,6 @@ data class MovementStep(
     val initialOrientation: RoverDirection,
     val finalPosition: Coordinates,
     val finalOrientation: RoverDirection,
-    val movement: RoverMovement
+    val movement: RoverMovement,
+    val movementDescription: String,
 )

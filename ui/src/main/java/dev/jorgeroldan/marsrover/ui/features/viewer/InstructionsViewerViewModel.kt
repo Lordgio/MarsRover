@@ -5,10 +5,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.jorgeroldan.marsrover.domain.mapper.InstructionsMapper
-import dev.jorgeroldan.marsrover.domain.model.Instruction
 import dev.jorgeroldan.marsrover.domain.model.InstructionItem
 import dev.jorgeroldan.marsrover.domain.model.InstructionResolution
 import dev.jorgeroldan.marsrover.domain.usecase.GetInstructionUseCase
+import dev.jorgeroldan.marsrover.ui.R
+import dev.jorgeroldan.marsrover.ui.util.ResourcesProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -16,6 +17,7 @@ import kotlinx.parcelize.RawValue
 
 class InstructionsViewerViewModel(
     private val savedStateHandle: SavedStateHandle,
+    private val resourcesProvider: ResourcesProvider,
     private val getInstructionUseCase: GetInstructionUseCase,
     private val instructionUrlPath: String? = null,
     //private val instructionModel: InstructionItem? = null
@@ -47,7 +49,10 @@ class InstructionsViewerViewModel(
 
     private suspend fun getSolutionModel(instructions: InstructionItem) {
 
-        val result = InstructionsMapper.processRoverPosition(instructions)
+        val result = InstructionsMapper.processRoverPosition(
+            instruction = instructions,
+            moveText = resourcesProvider.getString(R.string.instructions_viewer_events_move_event),
+            rotateText = resourcesProvider.getString(R.string.instructions_viewer_events_rotate_event))
         savedStateHandle[INSTRUCTIONS_VIEWER_STATE] = InstructionsViewerState.Data(result)
     }
 

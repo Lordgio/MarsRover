@@ -3,6 +3,11 @@
     <string name="select_instructions_list_title">Select from available instructions</string>
     <string name="select_instructions_custom_title">Or create your own</string>
     <string name="select_instructions_custom_button">Go custom!</string>
+    <string name="instructions_viewer_preconditions_title">Initial configuration</string>
+    <string name="instructions_viewer_report_title">Current rover position</string>
+    <string name="instructions_viewer_events_title">Rover events</string>
+    <string name="instructions_viewer_events_move_event">Move from %1$s to %2$s</string>
+    <string name="instructions_viewer_events_rotate_event">Rotate from %1$s to %2$s</string>
     <string name="generic_error_message">Ups! Looks like we had a bit of an issue here</string>
     <string name="generic_error_button">Go back</string>
 </resources>
