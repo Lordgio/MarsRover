@@ -30,7 +30,7 @@ dependencies {
 
     // Testing
     testImplementation(libs.junit)
-    testImplementation(libs.mockk.agent)
+    testImplementation(libs.mockk.jvm)
     testImplementation(libs.coroutines.test)
     testImplementation(libs.koin.test)
 }
