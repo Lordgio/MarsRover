@@ -16,3 +16,9 @@ data class MovementStep(
     val movement: RoverMovement,
     val movementDescription: String,
 )
+
+data class FriendlyUserText(
+    val startText: String,
+    val moveText: String,
+    val rotateText: String,
+)

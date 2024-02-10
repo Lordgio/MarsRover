@@ -7,3 +7,5 @@ sealed class Failure(val message: String) {
     data class IOFailure(val cause: String) : Failure(cause)
     data class UnexpectedFailure(val cause: String): Failure(cause)
 }
+
+data object InstructionFailure

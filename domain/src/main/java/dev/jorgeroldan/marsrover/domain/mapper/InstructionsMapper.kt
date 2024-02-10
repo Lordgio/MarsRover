@@ -1,6 +1,11 @@
 package dev.jorgeroldan.marsrover.domain.mapper
 
+import arrow.core.Either
+import arrow.core.left
+import arrow.core.right
 import dev.jorgeroldan.marsrover.domain.model.Coordinates
+import dev.jorgeroldan.marsrover.domain.model.FriendlyUserText
+import dev.jorgeroldan.marsrover.domain.model.InstructionFailure
 import dev.jorgeroldan.marsrover.domain.model.InstructionItem
 import dev.jorgeroldan.marsrover.domain.model.InstructionResolution
 import dev.jorgeroldan.marsrover.domain.model.MovementStep
@@ -9,29 +14,37 @@ import dev.jorgeroldan.marsrover.domain.model.RoverMovement
 
 object InstructionsMapper {
 
-    suspend fun processRoverPosition(instruction: InstructionItem, moveText: String, rotateText: String): InstructionResolution {
+    suspend fun processRoverPosition(
+        instruction: InstructionItem,
+        userTexts: FriendlyUserText,
+    ): Either<InstructionFailure, InstructionResolution> {
         val movements = generateMovements(
             initialPosition = instruction.roverPosition,
             initialOrientation = instruction.roverDirection,
             movements = instruction.movements,
-            moveText = moveText,
-            rotateText = rotateText)
+            userTexts = userTexts)
 
-        return InstructionResolution(
-            initial = instruction,
-            finalPosition = movements.last().finalPosition,
-            finalOrientation = movements.last().finalOrientation,
-            finalResolution = encodePosition(movements.last().finalPosition, movements.last().finalOrientation),
-            steps = movements
-        )
+        return if(areMovementsValid(movements, instruction.topRightCorner)) {
+            val lastMovement = movements.last()
+            InstructionResolution(
+                initial = instruction,
+                finalPosition = lastMovement.finalPosition,
+                finalOrientation = lastMovement.finalOrientation,
+                finalResolution = encodePosition(
+                    coordinates = lastMovement.finalPosition,
+                    orientation = lastMovement.finalOrientation),
+                steps = movements
+            ).right()
+        } else {
+            InstructionFailure.left()
+        }
     }
 
     private fun generateMovements(
         initialPosition: Coordinates,
         initialOrientation: RoverDirection,
         movements: List<RoverMovement>,
-        moveText: String,
-        rotateText: String
+        userTexts: FriendlyUserText,
     ): List<MovementStep> {
 
         val initialMovement = MovementStep(
@@ -40,7 +53,10 @@ object InstructionsMapper {
             finalPosition = initialPosition,
             finalOrientation = initialOrientation,
             movement = RoverMovement.MOVE,
-            movementDescription = "Rover on Start position: ${initialPosition.x} - ${initialPosition.y}"
+            movementDescription = userTexts.startText.format(
+                initialPosition.x,
+                initialPosition.y
+            )
         )
         return movements.runningFold(initialMovement) { accumulator, step ->
             val currentInitialPosition = accumulator.finalPosition
@@ -54,9 +70,9 @@ object InstructionsMapper {
                 finalOrientation = finalOrientation,
                 movement = step,
                 movementDescription = if (step == RoverMovement.MOVE) {
-                    formatMoveDescription(moveText, currentInitialPosition, finalPosition)
+                    formatMoveDescription(userTexts.moveText, currentInitialPosition, finalPosition)
                 } else {
-                    createRotateDescription(rotateText, currentInitialOrientation, finalOrientation)
+                    createRotateDescription(userTexts.rotateText, currentInitialOrientation, finalOrientation)
                 }
             )
         }
@@ -130,5 +146,14 @@ object InstructionsMapper {
             initialOrientation,
             finalOrientation
         )
+    }
+
+    private fun areMovementsValid(movements: List<MovementStep>, fieldCoordinates: Coordinates): Boolean {
+        val xFieldSize = 0 .. fieldCoordinates.x
+        val yFieldSize = 0 .. fieldCoordinates.y
+
+        return movements.all { step ->
+            !(xFieldSize.contains(step.finalPosition.x)) || !(yFieldSize.contains(step.finalPosition.y))
+        }
     }
 }

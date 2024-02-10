@@ -8,6 +8,7 @@
     <string name="instructions_viewer_events_title">Rover events</string>
     <string name="instructions_viewer_events_move_event">Move from %1$s to %2$s</string>
     <string name="instructions_viewer_events_rotate_event">Rotate from %1$s to %2$s</string>
+    <string name="instructions_viewer_events_start_event">Rover on Start position: %1$s - %2$s</string>
     <string name="generic_error_message">Ups! Looks like we had a bit of an issue here</string>
     <string name="generic_error_button">Go back</string>
 </resources>

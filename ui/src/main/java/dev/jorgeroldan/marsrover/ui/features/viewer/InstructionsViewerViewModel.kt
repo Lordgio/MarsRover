@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.jorgeroldan.marsrover.domain.mapper.InstructionsMapper
+import dev.jorgeroldan.marsrover.domain.model.FriendlyUserText
 import dev.jorgeroldan.marsrover.domain.model.InstructionItem
 import dev.jorgeroldan.marsrover.domain.model.InstructionResolution
 import dev.jorgeroldan.marsrover.domain.usecase.GetInstructionUseCase
@@ -48,12 +49,17 @@ class InstructionsViewerViewModel(
     }
 
     private suspend fun getSolutionModel(instructions: InstructionItem) {
-
-        val result = InstructionsMapper.processRoverPosition(
+        InstructionsMapper.processRoverPosition(
             instruction = instructions,
-            moveText = resourcesProvider.getString(R.string.instructions_viewer_events_move_event),
-            rotateText = resourcesProvider.getString(R.string.instructions_viewer_events_rotate_event))
-        savedStateHandle[INSTRUCTIONS_VIEWER_STATE] = InstructionsViewerState.Data(result)
+            userTexts = FriendlyUserText(
+                startText = resourcesProvider.getString(R.string.instructions_viewer_events_start_event),
+                moveText = resourcesProvider.getString(R.string.instructions_viewer_events_move_event),
+                rotateText = resourcesProvider.getString(R.string.instructions_viewer_events_rotate_event),
+            )
+        ).fold(
+            ifLeft = { savedStateHandle[INSTRUCTIONS_VIEWER_STATE] = InstructionsViewerState.Error },
+            ifRight = { savedStateHandle[INSTRUCTIONS_VIEWER_STATE] = InstructionsViewerState.Data(it) }
+        )
     }
 
     sealed interface InstructionsViewerState {
