@@ -153,7 +153,7 @@ object InstructionsMapper {
         val yFieldSize = 0 .. fieldCoordinates.y
 
         return movements.all { step ->
-            !(xFieldSize.contains(step.finalPosition.x)) || !(yFieldSize.contains(step.finalPosition.y))
+            xFieldSize.contains(step.finalPosition.x) && yFieldSize.contains(step.finalPosition.y)
         }
     }
 }

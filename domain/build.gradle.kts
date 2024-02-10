@@ -18,6 +18,7 @@ dependencies {
     implementation(libs.arrow.core)
 
     // Testing
-    testImplementation(libs.mockk.agent)
+    testImplementation(libs.junit)
     testImplementation(libs.coroutines.test)
+    testImplementation(libs.koin.test)
 }
