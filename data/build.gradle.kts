@@ -29,6 +29,8 @@ dependencies {
     implementation(libs.retrofit.adapter.either)
 
     // Testing
+    testImplementation(libs.junit)
     testImplementation(libs.mockk.agent)
     testImplementation(libs.coroutines.test)
+    testImplementation(libs.koin.test)
 }
