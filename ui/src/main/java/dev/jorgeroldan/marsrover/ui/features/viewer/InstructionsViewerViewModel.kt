@@ -20,24 +20,28 @@ class InstructionsViewerViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val resourcesProvider: ResourcesProvider,
     private val getInstructionUseCase: GetInstructionUseCase,
-    private val instructionUrlPath: String? = null,
-    //private val instructionModel: InstructionItem? = null
 ) : ViewModel() {
 
     val state = savedStateHandle.getStateFlow<InstructionsViewerState>(INSTRUCTIONS_VIEWER_STATE, InstructionsViewerState.Idle)
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            savedStateHandle[INSTRUCTIONS_VIEWER_STATE] = InstructionsViewerState.Loading
-            if (instructionUrlPath != null) {
-                getInstructionModel(instructionUrlPath)
-            } /*else if (instructionModel != null) {
+        //initViewModel()
+    }
+
+    fun initViewModel(
+        instructionUrlPath: String? = null,
+        instructionModel: InstructionItem? = null
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        savedStateHandle[INSTRUCTIONS_VIEWER_STATE] = InstructionsViewerState.Loading
+        if (instructionUrlPath != null) {
+            getInstructionModel(instructionUrlPath)
+        } /*else if (instructionModel != null) {
                 getSolutionModel(instructionModel)
             } */else {
-                savedStateHandle[INSTRUCTIONS_VIEWER_STATE] = InstructionsViewerState.Error
-            }
+            savedStateHandle[INSTRUCTIONS_VIEWER_STATE] = InstructionsViewerState.Error
         }
     }
+
 
     private suspend fun getInstructionModel(urlPath: String) {
         getInstructionUseCase

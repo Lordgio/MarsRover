@@ -3,9 +3,13 @@ package dev.jorgeroldan.marsrover.ui.util
 import android.content.Context
 import androidx.annotation.StringRes
 
-class ResourcesProvider(private val context: Context) {
+interface ResourcesProvider {
+    fun getString(@StringRes resourceId: Int): String
+}
 
-    fun getString(@StringRes resourceId: Int): String {
+class ResourcesProviderImpl(private val context: Context) : ResourcesProvider {
+
+    override fun getString(@StringRes resourceId: Int): String {
         return context.getString(resourceId)
     }
 }

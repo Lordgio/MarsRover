@@ -28,6 +28,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
@@ -61,7 +62,7 @@ fun InstructionsViewerScreen(
     onBack: () -> Unit,
 ) {
 
-    val viewModel: InstructionsViewerViewModel = koinViewModel { parametersOf(instructionPath) }
+    val viewModel: InstructionsViewerViewModel = koinViewModel()
 
     val state = viewModel.state.collectAsStateWithLifecycle()
 
@@ -76,6 +77,10 @@ fun InstructionsViewerScreen(
         InstructionsViewerViewModel.InstructionsViewerState.Error -> GenericErrorScreen()
         InstructionsViewerViewModel.InstructionsViewerState.Idle -> { /* no-op */ }
         InstructionsViewerViewModel.InstructionsViewerState.Loading -> FullScreenLoader()
+    }
+
+    LaunchedEffect(key1 = null) {
+        viewModel.initViewModel(instructionPath)
     }
 }
 

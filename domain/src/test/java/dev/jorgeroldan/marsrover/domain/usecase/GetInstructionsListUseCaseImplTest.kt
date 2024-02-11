@@ -10,16 +10,16 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
-class GetInstructionsListUseCaseTest {
+class GetInstructionsListUseCaseImplTest {
 
     private val repository: MarsRoverRepositoryFake = MarsRoverRepositoryFake(
         instructionsListResponse = Either.Left(Failure.IOFailure("")),
     )
-    private lateinit var useCase: GetInstructionsListUseCase
+    private lateinit var useCase: GetInstructionsListUseCaseImpl
 
     @Before
     fun setup() {
-        useCase = GetInstructionsListUseCase(repository)
+        useCase = GetInstructionsListUseCaseImpl(repository)
     }
 
     @Test

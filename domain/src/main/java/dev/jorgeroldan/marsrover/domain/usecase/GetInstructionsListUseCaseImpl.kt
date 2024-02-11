@@ -5,9 +5,15 @@ import dev.jorgeroldan.marsrover.domain.model.Failure
 import dev.jorgeroldan.marsrover.domain.model.Instruction
 import dev.jorgeroldan.marsrover.domain.repository.MarsRoverRepository
 
-class GetInstructionsListUseCase(private val repository: MarsRoverRepository) {
+interface GetInstructionsListUseCase {
+    suspend operator fun invoke() : Either<Failure, List<Instruction>>
+}
 
-    suspend operator fun invoke() : Either<Failure, List<Instruction>> {
+class GetInstructionsListUseCaseImpl(
+    private val repository: MarsRoverRepository
+) : GetInstructionsListUseCase {
+
+    override suspend operator fun invoke() : Either<Failure, List<Instruction>> {
         return repository.getInstructionsList()
     }
 }
