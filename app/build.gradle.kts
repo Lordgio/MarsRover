@@ -63,4 +63,10 @@ dependencies {
 
     // DI
     implementation(libs.koin.android)
+
+    // Testing
+    testImplementation(libs.junit)
+    testImplementation(libs.koin.test)
+    testImplementation(libs.mockk.android)
+    testImplementation(libs.mockk.agent)
 }
