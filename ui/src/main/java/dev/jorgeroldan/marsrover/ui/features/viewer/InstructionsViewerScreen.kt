@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -53,17 +54,14 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun InstructionsViewerScreen(
     instructionPath: String,
     modifier: Modifier = Modifier,
+    viewModel: InstructionsViewerViewModel = koinViewModel(),
     onBack: () -> Unit,
 ) {
-
-    val viewModel: InstructionsViewerViewModel = koinViewModel()
-
     val state = viewModel.state.collectAsStateWithLifecycle()
 
     when (val value = state.value) {
@@ -94,6 +92,7 @@ private fun InstructionsViewerScreenContent(
         modifier = modifier
             .systemBarsPadding()
             .padding(16.dp)
+            .testTag("ContentScreen")
             .verticalScroll(
                 state = rememberScrollState(),
                 flingBehavior = ScrollableDefaults.flingBehavior()

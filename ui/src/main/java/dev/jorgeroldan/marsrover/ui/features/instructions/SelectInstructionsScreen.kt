@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -39,13 +40,11 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SelectInstructionsScreen(
-    onInstructionSelected: (Instruction) -> Unit,
     modifier: Modifier = Modifier,
-    onCreateInstructionsSelected: () -> Unit,
+    viewModel: SelectInstructionsViewModel = koinViewModel(),
+    onInstructionSelected: (Instruction) -> Unit = {},
+    onCreateInstructionsSelected: () -> Unit = {},
 ) {
-
-    val viewModel: SelectInstructionsViewModel = koinViewModel()
-
     val state = viewModel.state.collectAsStateWithLifecycle()
 
     when (val value = state.value) {
@@ -74,7 +73,8 @@ private fun SelectInstructionsScreenContent(
     Column(
         modifier = modifier
             .systemBarsPadding()
-            .padding(16.dp),
+            .padding(16.dp)
+            .testTag("ContentScreen"),
     ) {
         Text(
             text = stringResource(id = R.string.select_instructions_list_title),
