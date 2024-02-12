@@ -1,19 +1,16 @@
 package dev.jorgeroldan.marsrover.ui.features.viewer
 
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.VectorConverter
-import androidx.compose.animation.core.animateValue
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -21,14 +18,18 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.translate
@@ -38,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.jorgeroldan.marsrover.domain.model.InstructionItem
 import dev.jorgeroldan.marsrover.domain.model.InstructionResolution
 import dev.jorgeroldan.marsrover.domain.model.MovementStep
 import dev.jorgeroldan.marsrover.domain.model.RoverDirection
@@ -70,13 +72,40 @@ fun InstructionsViewerScreen(
                 onBack = onBack,
             )
         }
-        InstructionsViewerViewModel.InstructionsViewerState.Error -> GenericErrorScreen()
+        InstructionsViewerViewModel.InstructionsViewerState.Error -> GenericErrorScreen(onBackClick = onBack)
         InstructionsViewerViewModel.InstructionsViewerState.Idle -> { /* no-op */ }
         InstructionsViewerViewModel.InstructionsViewerState.Loading -> FullScreenLoader()
     }
 
     LaunchedEffect(key1 = null) {
-        viewModel.initViewModel(instructionPath)
+        viewModel.initViewModel(instructionUrlPath = instructionPath)
+    }
+}
+
+@Composable
+fun InstructionsViewerScreen(
+    instruction: InstructionItem,
+    modifier: Modifier = Modifier,
+    viewModel: InstructionsViewerViewModel = koinViewModel(),
+    onBack: () -> Unit,
+) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
+
+    when (val value = state.value) {
+        is InstructionsViewerViewModel.InstructionsViewerState.Data -> {
+            InstructionsViewerScreenContent(
+                report = value.result,
+                modifier = modifier,
+                onBack = onBack,
+            )
+        }
+        InstructionsViewerViewModel.InstructionsViewerState.Error -> GenericErrorScreen(onBackClick = onBack)
+        InstructionsViewerViewModel.InstructionsViewerState.Idle -> { /* no-op */ }
+        InstructionsViewerViewModel.InstructionsViewerState.Loading -> FullScreenLoader()
+    }
+
+    LaunchedEffect(key1 = null) {
+        viewModel.initViewModel(instructionModel = instruction)
     }
 }
 
@@ -178,23 +207,16 @@ private fun ReplayMovements(
     movements: ImmutableList<MovementStep>,
     modifier: Modifier = Modifier
 ) {
-    val infiniteTransition = rememberInfiniteTransition(label = "")
-    val animatedElement by infiniteTransition.animateValue(
-        initialValue = 0,
-        targetValue = movements.size,
-        typeConverter = Int.VectorConverter,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 2000 * movements.size, delayMillis = 2000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart,
-        ),
-        label = "anim"
-    )
-    val currentMovement by rememberUpdatedState(newValue = movements[animatedElement])
+    var activeAnimation by remember { mutableStateOf(false) }
+    val currentMovement by animateListState(items = movements, activeAnimation)
+    val vectorNorthPainter = painterResource(id = R.drawable.arrow_circle_up)
+    val vectorSouthPainter = painterResource(id = R.drawable.arrow_circle_down)
+    val vectorEastPainter = painterResource(id = R.drawable.arrow_circle_right)
+    val vectorWestPainter = painterResource(id = R.drawable.arrow_circle_left)
 
-    val vectorNorthPainter = rememberVectorPainter(image = Icons.Rounded.KeyboardArrowUp)
-    val vectorSouthPainter = rememberVectorPainter(image = Icons.Rounded.KeyboardArrowDown)
-    val vectorEastPainter = rememberVectorPainter(image = Icons.Rounded.KeyboardArrowRight)
-    val vectorWestPainter = rememberVectorPainter(image = Icons.Rounded.KeyboardArrowLeft)
+    if (currentMovement == movements.last()) {
+        activeAnimation = false
+    }
 
     Column(
         modifier = modifier
@@ -205,11 +227,23 @@ private fun ReplayMovements(
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center
         )
+        FilledTonalButton(
+            enabled = !activeAnimation,
+            onClick = { activeAnimation = true }
+        ) {
+            Icon(painter = painterResource(id = R.drawable.play_circle), contentDescription = "")
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "Play animation")
+        }
         Text(
-            modifier = Modifier.padding(vertical = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
             text = currentMovement.movementDescription,
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center
         )
+
         GridCanvas(
             rows = rows,
             columns = columns,
@@ -236,6 +270,33 @@ private fun ReplayMovements(
             }
         }
     }
+}
+
+@Composable
+fun animateListState(
+    items: ImmutableList<MovementStep>,
+    isActive: Boolean,
+) : State<MovementStep> {
+    val state = remember { mutableStateOf(items.first()) }
+
+    if (isActive) {
+        val (_, setValue) = state
+        LaunchedEffect(key1 = items) {
+            setValue(items.first())
+            animate(
+                typeConverter = Int.VectorConverter,
+                initialValue = 0,
+                targetValue = items.size - 1,
+                animationSpec = tween(
+                    durationMillis = 2000 * items.size,
+                    easing = LinearEasing
+                ),
+                block = { value, _ -> setValue(items[value]) }
+            )
+        }
+    }
+
+    return state
 }
 
 @ScreenPreview
