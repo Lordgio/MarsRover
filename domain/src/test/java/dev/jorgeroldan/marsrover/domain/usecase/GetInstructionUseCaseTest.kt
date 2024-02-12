@@ -21,7 +21,7 @@ class GetInstructionUseCaseTest {
 
     @Before
     fun setup() {
-        useCase = GetInstructionUseCase(repository)
+        useCase = GetInstructionUseCaseImpl(repository)
     }
 
     @Test
