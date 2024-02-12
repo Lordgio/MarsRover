@@ -18,11 +18,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.KeyboardArrowLeft
-import androidx.compose.material.icons.rounded.KeyboardArrowRight
-import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.Card
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,8 +32,8 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.translate
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -82,6 +80,7 @@ fun InstructionsViewerScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InstructionsViewerScreenContent(
     report: InstructionResolution,
@@ -98,29 +97,32 @@ private fun InstructionsViewerScreenContent(
                 flingBehavior = ScrollableDefaults.flingBehavior()
             ),
     ) {
-        IconButton(
-            onClick = onBack
-        ) {
-            Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "")
-        }
+        CenterAlignedTopAppBar(
+            title = { Text(text = stringResource(id = R.string.instructions_viewer_toolbar_title)) },
+            navigationIcon = {
+                IconButton(onClick = onBack) {
+                    Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "")
+                }
+            }
+        )
+
         GenericInfoCard(
             sectionTitle = stringResource(id = R.string.instructions_viewer_preconditions_title),
             items = persistentListOf(
-                "Grid size:" to "${report.initial.topRightCorner.x} x ${report.initial.topRightCorner.y}",
-                "Rover position:" to "${report.initial.roverPosition.x} x ${report.initial.roverPosition.y}",
-                "Rover orientation:" to "${report.initial.roverDirection}",
-                "Movements:" to report.initial.encodedMovements,
+                stringResource(id = R.string.instructions_viewer_info_grid) to "${report.initial.topRightCorner.x} x ${report.initial.topRightCorner.y}",
+                stringResource(id = R.string.instructions_viewer_info_position) to "${report.initial.roverPosition.x} x ${report.initial.roverPosition.y}",
+                stringResource(id = R.string.instructions_viewer_info_orientation) to "${report.initial.roverDirection}",
+                stringResource(id = R.string.instructions_viewer_info_movements) to report.initial.encodedMovements,
             )
         )
         GenericInfoCard(
             sectionTitle = stringResource(id = R.string.instructions_viewer_report_title),
             items = persistentListOf(
-                "Rover position:" to "${report.finalPosition.x} x ${report.finalPosition.y}",
-                "Rover orientation:" to "${report.finalOrientation}",
-                "Final position:" to report.finalResolution
+                stringResource(id = R.string.instructions_viewer_info_position) to "${report.finalPosition.x} x ${report.finalPosition.y}",
+                stringResource(id = R.string.instructions_viewer_info_orientation) to "${report.finalOrientation}",
+                stringResource(id = R.string.instructions_viewer_info_final) to report.finalResolution
             )
         )
-        Spacer(modifier = Modifier.height(20.dp))
         if (report.steps.isNotEmpty()) {
             ReplayMovements(
                 columns = report.initial.topRightCorner.y,
