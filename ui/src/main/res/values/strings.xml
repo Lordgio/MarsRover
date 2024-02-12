@@ -15,6 +15,19 @@
     <string name="instructions_viewer_info_orientation">Rover orientation:</string>
     <string name="instructions_viewer_info_movements">Movements:</string>
     <string name="instructions_viewer_info_final">Final position:</string>
+    <string name="instructions_builder_toolbar_title">Instructions builder</string>
+    <string name="instructions_builder_field_title">Field size</string>
+    <string name="instructions_builder_position_title">Rover position</string>
+    <string name="instructions_builder_orientation_title">Rover orientation</string>
+    <string name="instructions_builder_orientation_north">North</string>
+    <string name="instructions_builder_orientation_south">South</string>
+    <string name="instructions_builder_orientation_west">West</string>
+    <string name="instructions_builder_orientation_east">East</string>
+    <string name="instructions_builder_movements_title">Rover movements</string>
+    <string name="instructions_builder_movement_left">Turn left</string>
+    <string name="instructions_builder_movement_move">Move</string>
+    <string name="instructions_builder_movement_right">Turn right</string>
+    <string name="instructions_builder_button_text">See results!</string>
     <string name="generic_error_message">Ups! Looks like we had a bit of an issue here</string>
     <string name="generic_error_button">Go back</string>
 </resources>
