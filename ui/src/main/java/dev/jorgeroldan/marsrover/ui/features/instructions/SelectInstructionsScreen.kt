@@ -44,6 +44,7 @@ fun SelectInstructionsScreen(
     viewModel: SelectInstructionsViewModel = koinViewModel(),
     onInstructionSelected: (Instruction) -> Unit = {},
     onCreateInstructionsSelected: () -> Unit = {},
+    onBack: () -> Unit,
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
 
@@ -56,7 +57,7 @@ fun SelectInstructionsScreen(
                 onCreateInstructionsSelected = onCreateInstructionsSelected,
             )
         }
-        SelectInstructionsViewModel.SelectInstructionsState.Error -> GenericErrorScreen()
+        SelectInstructionsViewModel.SelectInstructionsState.Error -> GenericErrorScreen(onBackClick = onBack)
         SelectInstructionsViewModel.SelectInstructionsState.Idle -> { /* no-op */ }
         SelectInstructionsViewModel.SelectInstructionsState.Loading -> FullScreenLoader()
     }
