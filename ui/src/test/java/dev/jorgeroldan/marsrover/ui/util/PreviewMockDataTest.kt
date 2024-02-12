@@ -14,6 +14,6 @@ class PreviewMockDataTest {
     @Test
     fun `instructionReport returns valid report`() {
         val result = PreviewMockData.instructionReport
-        Assert.assertEquals("1 1 N", result.finalResolution)
+        Assert.assertEquals("1 3 W", result.finalResolution)
     }
 }
