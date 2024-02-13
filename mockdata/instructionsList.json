@@ -4,15 +4,15 @@
     "urlPath": "instructions1"
   },
   {
-    "name": "Second",
+    "name": "Big size field",
     "urlPath": "instructions2"
   },
   {
-    "name": "Third",
+    "name": "Small field",
     "urlPath": "instructions3"
   },
   {
-    "name": "Fourth",
+    "name": "Failing instructions",
     "urlPath": "instructions4"
   },
   {
