@@ -11,6 +11,7 @@ import dev.jorgeroldan.marsrover.domain.model.InstructionResolution
 import dev.jorgeroldan.marsrover.domain.usecase.GetInstructionUseCase
 import dev.jorgeroldan.marsrover.ui.R
 import dev.jorgeroldan.marsrover.ui.util.ResourcesProvider
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -20,6 +21,7 @@ class InstructionsViewerViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val resourcesProvider: ResourcesProvider,
     private val getInstructionUseCase: GetInstructionUseCase,
+    private val backgroundDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     val state = savedStateHandle.getStateFlow<InstructionsViewerState>(INSTRUCTIONS_VIEWER_STATE, InstructionsViewerState.Idle)
@@ -27,7 +29,7 @@ class InstructionsViewerViewModel(
     fun initViewModel(
         instructionUrlPath: String? = null,
         instructionModel: InstructionItem? = null
-    ) = viewModelScope.launch(Dispatchers.IO) {
+    ) = viewModelScope.launch(backgroundDispatcher) {
         savedStateHandle[INSTRUCTIONS_VIEWER_STATE] = InstructionsViewerState.Loading
         if (instructionUrlPath != null) {
             getInstructionModel(instructionUrlPath)

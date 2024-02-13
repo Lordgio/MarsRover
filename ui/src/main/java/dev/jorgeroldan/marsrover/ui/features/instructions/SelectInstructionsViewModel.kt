@@ -8,6 +8,7 @@ import dev.jorgeroldan.marsrover.domain.model.Instruction
 import dev.jorgeroldan.marsrover.domain.usecase.GetInstructionsListUseCase
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -15,7 +16,8 @@ import kotlinx.parcelize.RawValue
 
 class SelectInstructionsViewModel(
     private val savedStateHandle: SavedStateHandle,
-    private val useCase: GetInstructionsListUseCase
+    private val getInstructionsListUseCase: GetInstructionsListUseCase,
+    private val backgroundDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     val state = savedStateHandle.getStateFlow<SelectInstructionsState>(SELECT_INSTRUCTIONS_STATE, SelectInstructionsState.Idle)
@@ -24,10 +26,10 @@ class SelectInstructionsViewModel(
         initViewmodel()
     }
 
-    private fun initViewmodel() = viewModelScope.launch(Dispatchers.IO) {
+    private fun initViewmodel() = viewModelScope.launch(backgroundDispatcher) {
         savedStateHandle[SELECT_INSTRUCTIONS_STATE] = SelectInstructionsState.Loading
 
-        useCase.invoke().fold(
+        getInstructionsListUseCase.invoke().fold(
             ifLeft = { savedStateHandle[SELECT_INSTRUCTIONS_STATE] = SelectInstructionsState.Error },
             ifRight = {
                 items -> savedStateHandle[SELECT_INSTRUCTIONS_STATE] = SelectInstructionsState.Data(items.toImmutableList())
