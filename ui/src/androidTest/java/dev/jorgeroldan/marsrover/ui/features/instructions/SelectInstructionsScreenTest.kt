@@ -24,7 +24,8 @@ class SelectInstructionsScreenTest {
                 SelectInstructionsScreen(
                     viewModel = viewModel,
                     onInstructionSelected = {},
-                    onCreateInstructionsSelected = {})
+                    onCreateInstructionsSelected = {},
+                    onBack = {})
             }
         }
 
@@ -41,7 +42,8 @@ class SelectInstructionsScreenTest {
                 SelectInstructionsScreen(
                     viewModel = viewModel,
                     onInstructionSelected = {},
-                    onCreateInstructionsSelected = {})
+                    onCreateInstructionsSelected = {},
+                    onBack = {})
             }
         }
 
@@ -59,7 +61,8 @@ class SelectInstructionsScreenTest {
                 SelectInstructionsScreen(
                     viewModel = viewModel,
                     onInstructionSelected = {},
-                    onCreateInstructionsSelected = {})
+                    onCreateInstructionsSelected = {},
+                    onBack = {})
             }
         }
 
