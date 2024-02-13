@@ -12,6 +12,7 @@ import dev.jorgeroldan.marsrover.domain.model.RoverMovement
 import dev.jorgeroldan.marsrover.domain.usecase.GetInstructionUseCase
 import dev.jorgeroldan.marsrover.ui.util.ResourcesProvider
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -33,6 +34,7 @@ class InstructionsViewerViewModelTest {
     private lateinit var viewModel: InstructionsViewerViewModel
     private val defaultDispatcher = StandardTestDispatcher()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
         Dispatchers.setMain(defaultDispatcher)
@@ -42,7 +44,7 @@ class InstructionsViewerViewModelTest {
     fun `init viewmodel with usecase error configs proper states`() = runTest {
         useCase.useCaseResponse = Either.Left(Failure.UnexpectedFailure(""))
         viewModel = InstructionsViewerViewModel(savedStateHandle, resourcesProvider, useCase, defaultDispatcher)
-        val collector = launch(UnconfinedTestDispatcher(testScheduler)) {
+        val collector = launch(defaultDispatcher) {
             var expectedState: InstructionsViewerViewModel.InstructionsViewerState = InstructionsViewerViewModel.InstructionsViewerState.Idle
             viewModel.state.collect { state ->
                 when(state) {
@@ -133,6 +135,7 @@ class InstructionsViewerViewModelTest {
         collector.join()
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @After
     fun tearDown() {
         Dispatchers.resetMain()

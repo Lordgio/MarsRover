@@ -7,6 +7,7 @@ import dev.jorgeroldan.marsrover.domain.model.Failure
 import dev.jorgeroldan.marsrover.domain.model.Instruction
 import dev.jorgeroldan.marsrover.domain.usecase.GetInstructionsListUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -25,6 +26,7 @@ class SelectInstructionsViewModelTest {
     private lateinit var viewModel: SelectInstructionsViewModel
     private val defaultDispatcher = StandardTestDispatcher()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
         Dispatchers.setMain(defaultDispatcher)
@@ -54,6 +56,7 @@ class SelectInstructionsViewModelTest {
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @After
     fun tearDown() {
         Dispatchers.resetMain()

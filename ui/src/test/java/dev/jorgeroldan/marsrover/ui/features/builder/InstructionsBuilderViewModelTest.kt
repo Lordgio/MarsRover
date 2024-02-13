@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import dev.jorgeroldan.marsrover.domain.model.RoverDirection
 import dev.jorgeroldan.marsrover.domain.model.RoverMovement
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -17,6 +18,7 @@ class InstructionsBuilderViewModelTest {
     private val savedStateHandle = SavedStateHandle()
     private lateinit var viewModel: InstructionsBuilderViewModel
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
@@ -130,6 +132,7 @@ class InstructionsBuilderViewModelTest {
         Assert.assertEquals(RoverDirection.EAST, result.roverDirection)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @After
     fun tearDown() {
         Dispatchers.resetMain()
