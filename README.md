@@ -54,9 +54,9 @@ con not be recovered or processed.
 | Compose Lint checks   | A group of lint checks that help creating composable functions without mistakes.             |
 
 > [!IMPORTANT]
-> Important information: Android Studio Stable (Hedgehog 2023.1.1) doesn't include yet support for rendering Compose 
+> Android Studio Stable (Hedgehog 2023.1.1) doesn't include yet support for rendering Compose 
 > layout previews when you target API 34. Because of this issue, most of the previews will fail to render in this Android
-> Studio version until Google releases the next versions. 
+> Studio version until Google releases the next IDE versions. 
  
 ## Best practices applied
 
