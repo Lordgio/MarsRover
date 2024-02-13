@@ -1,4 +1,4 @@
-package dev.jorgeroldan.marsrover.ui.features.app
+package dev.jorgeroldan.marsrover.ui.app
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +17,7 @@ import dev.jorgeroldan.marsrover.ui.features.builder.InstructionsBuilderScreen
 import dev.jorgeroldan.marsrover.ui.features.instructions.SelectInstructionsScreen
 import dev.jorgeroldan.marsrover.ui.features.viewer.InstructionsViewerScreen
 import dev.jorgeroldan.marsrover.ui.theme.MarsRoverTheme
+import dev.jorgeroldan.marsrover.ui.util.NavigationConstants as NavConstants
 
 @Composable
 fun App(
@@ -46,26 +47,26 @@ fun App(
                         }
                     )
                 }
-                composable(Screens.InstructionsViewerScreen.route + "/{path}") { backStackEntry ->
+                composable(Screens.InstructionsViewerScreen.route + NavConstants.NAV_ROUTE_PATH) { backStackEntry ->
                     InstructionsViewerScreen(
                         modifier = Modifier.fillMaxSize(),
-                        instructionPath = backStackEntry.arguments?.getString("path") ?: "",
+                        instructionPath = backStackEntry.arguments?.getString(NavConstants.NAV_PATH_ARG) ?: "",
                         onBack = { navController.popBackStack() }
                     )
                 }
-                composable(Screens.InstructionsViewerScreen.route + "/{fieldX}/{fieldY}/{roverX}/{roverY}/{direction}/{movements}") { backStackEntry ->
+                composable(Screens.InstructionsViewerScreen.route + NavConstants.NAV_VIEWER_FULL_ROUTE) { backStackEntry ->
                     val item = InstructionItem(
                         topRightCorner = Coordinates(
-                            x = backStackEntry.arguments?.getString("fieldX")?.toIntOrNull() ?: 0,
-                            y = backStackEntry.arguments?.getString("fieldY")?.toIntOrNull() ?: 0,
+                            x = backStackEntry.arguments?.getString(NavConstants.NAV_VIEWER_FIELD_X_ARG)?.toIntOrNull() ?: 0,
+                            y = backStackEntry.arguments?.getString(NavConstants.NAV_VIEWER_FIELD_Y_ARG)?.toIntOrNull() ?: 0,
                         ),
                         roverPosition = Coordinates(
-                            x = backStackEntry.arguments?.getString("roverX")?.toIntOrNull() ?: 0,
-                            y = backStackEntry.arguments?.getString("roverY")?.toIntOrNull() ?: 0,
+                            x = backStackEntry.arguments?.getString(NavConstants.NAV_VIEWER_ROVER_X_ARG)?.toIntOrNull() ?: 0,
+                            y = backStackEntry.arguments?.getString(NavConstants.NAV_VIEWER_ROVER_Y_ARG)?.toIntOrNull() ?: 0,
                         ),
-                        roverDirection = backStackEntry.arguments?.getString("direction")?.toRoverDirection() ?: RoverDirection.NORTH,
-                        encodedMovements = backStackEntry.arguments?.getString("movements") ?: "",
-                        movements = (backStackEntry.arguments?.getString("movements") ?: "").toRoverMovement()
+                        roverDirection = backStackEntry.arguments?.getString(NavConstants.NAV_VIEWER_DIRECTION_ARG)?.toRoverDirection() ?: RoverDirection.NORTH,
+                        encodedMovements = backStackEntry.arguments?.getString(NavConstants.NAV_VIEWER_MOVEMENTS_ARG) ?: "",
+                        movements = (backStackEntry.arguments?.getString(NavConstants.NAV_VIEWER_MOVEMENTS_ARG) ?: "").toRoverMovement()
                     )
                     InstructionsViewerScreen(
                         modifier = Modifier.fillMaxSize(),
@@ -78,7 +79,8 @@ fun App(
                         modifier = Modifier.fillMaxSize(),
                         onBack = { navController.popBackStack() },
                         onNavigate = { item ->
-                            navController.navigate(Screens.InstructionsViewerScreen.route +
+                            navController.navigate(
+                                Screens.InstructionsViewerScreen.route +
                                     "/${item.topRightCorner.x}/${item.topRightCorner.y}" +
                                     "/${item.roverPosition.x}/${item.roverPosition.y}" +
                                     "/${item.roverDirection}/${item.encodedMovements}"

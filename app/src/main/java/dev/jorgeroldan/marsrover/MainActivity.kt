@@ -8,7 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import dev.jorgeroldan.marsrover.data.di.DataModule
 import dev.jorgeroldan.marsrover.domain.di.DomainModule
 import dev.jorgeroldan.marsrover.ui.di.UiModule
-import dev.jorgeroldan.marsrover.ui.features.app.App
+import dev.jorgeroldan.marsrover.ui.app.App
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext
