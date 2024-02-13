@@ -18,36 +18,37 @@ object InstructionsMapper {
         instruction: InstructionItem,
         userTexts: FriendlyUserText,
     ): Either<InstructionFailure, InstructionResolution> {
-        val movements = generateMovements(
+        val initialMovement = generateFirstMovement(
             initialPosition = instruction.roverPosition,
             initialOrientation = instruction.roverDirection,
+            userTexts = userTexts
+        )
+        val movements = generateMovements(
+            initialMovement = initialMovement,
             movements = instruction.movements,
             userTexts = userTexts)
+        val validMovements = getValidMovements(movements, instruction.topRightCorner)
 
-        return if(areMovementsValid(movements, instruction.topRightCorner)) {
-            val lastMovement = movements.last()
-            InstructionResolution(
-                initial = instruction,
-                finalPosition = lastMovement.finalPosition,
-                finalOrientation = lastMovement.finalOrientation,
-                finalResolution = encodePosition(
-                    coordinates = lastMovement.finalPosition,
-                    orientation = lastMovement.finalOrientation),
-                steps = movements
-            ).right()
-        } else {
-            InstructionFailure.left()
-        }
+        val lastMovement = validMovements.lastOrNull() ?: initialMovement
+        val report = InstructionResolution(
+            initial = instruction,
+            finalPosition = lastMovement.finalPosition,
+            finalOrientation = lastMovement.finalOrientation,
+            finalResolution = encodePosition(
+                coordinates = lastMovement.finalPosition,
+                orientation = lastMovement.finalOrientation),
+            steps = validMovements
+        )
+
+        return if(movements.size == validMovements.size) report.right() else InstructionFailure(report).left()
     }
 
-    private fun generateMovements(
+    private fun generateFirstMovement(
         initialPosition: Coordinates,
         initialOrientation: RoverDirection,
-        movements: List<RoverMovement>,
         userTexts: FriendlyUserText,
-    ): List<MovementStep> {
-
-        val initialMovement = MovementStep(
+    ): MovementStep {
+        return MovementStep(
             initialCoordinates = Coordinates(0,0),
             initialOrientation = RoverDirection.NORTH,
             finalPosition = initialPosition,
@@ -58,6 +59,14 @@ object InstructionsMapper {
                 initialPosition.y
             )
         )
+    }
+
+    private fun generateMovements(
+        initialMovement: MovementStep,
+        movements: List<RoverMovement>,
+        userTexts: FriendlyUserText,
+    ): List<MovementStep> {
+        
         return movements.runningFold(initialMovement) { accumulator, step ->
             val currentInitialPosition = accumulator.finalPosition
             val currentInitialOrientation = accumulator.finalOrientation
@@ -148,12 +157,13 @@ object InstructionsMapper {
         )
     }
 
-    private fun areMovementsValid(movements: List<MovementStep>, fieldCoordinates: Coordinates): Boolean {
+    private fun getValidMovements(movements: List<MovementStep>, fieldCoordinates: Coordinates): List<MovementStep> {
         val xFieldSize = 0 .. fieldCoordinates.x
         val yFieldSize = 0 .. fieldCoordinates.y
 
-        return movements.all { step ->
-            xFieldSize.contains(step.finalPosition.x) && yFieldSize.contains(step.finalPosition.y)
-        }
+        val index = movements.indexOfFirst { step ->
+            !(xFieldSize.contains(step.finalPosition.x)) || !(yFieldSize.contains(step.finalPosition.y)) }
+        val listIndex = if (index == 0) index else index - 1
+        return if (index == -1) movements else movements.subList(0, listIndex)
     }
 }
