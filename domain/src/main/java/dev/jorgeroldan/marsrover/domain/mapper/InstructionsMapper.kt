@@ -14,7 +14,7 @@ import dev.jorgeroldan.marsrover.domain.model.RoverMovement
 
 object InstructionsMapper {
 
-    suspend fun processRoverPosition(
+    fun processRoverPosition(
         instruction: InstructionItem,
         userTexts: FriendlyUserText,
     ): Either<InstructionFailure, InstructionResolution> {
