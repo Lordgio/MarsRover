@@ -50,7 +50,7 @@ class InstructionsViewerViewModel(
             )
     }
 
-    private suspend fun getSolutionModel(instructions: InstructionItem) {
+    private fun getSolutionModel(instructions: InstructionItem) {
         InstructionsMapper.processRoverPosition(
             instruction = instructions,
             userTexts = FriendlyUserText(
@@ -59,8 +59,8 @@ class InstructionsViewerViewModel(
                 rotateText = resourcesProvider.getString(R.string.instructions_viewer_events_rotate_event),
             )
         ).fold(
-            ifLeft = { savedStateHandle[INSTRUCTIONS_VIEWER_STATE] = InstructionsViewerState.Error },
-            ifRight = { savedStateHandle[INSTRUCTIONS_VIEWER_STATE] = InstructionsViewerState.Data(it) }
+            ifLeft = { savedStateHandle[INSTRUCTIONS_VIEWER_STATE] = InstructionsViewerState.Data(true, it.report) },
+            ifRight = { savedStateHandle[INSTRUCTIONS_VIEWER_STATE] = InstructionsViewerState.Data(false, it) }
         )
     }
 
@@ -70,7 +70,10 @@ class InstructionsViewerViewModel(
         @Parcelize
         data object Loading : InstructionsViewerState, Parcelable
         @Parcelize
-        data class Data(val result: @RawValue InstructionResolution): InstructionsViewerState, Parcelable
+        data class Data(
+            val hasInstructionsError: Boolean,
+            val result: @RawValue InstructionResolution
+        ): InstructionsViewerState, Parcelable
         @Parcelize
         data object Error : InstructionsViewerState, Parcelable
     }

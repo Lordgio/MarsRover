@@ -68,6 +68,7 @@ fun InstructionsViewerScreen(
         is InstructionsViewerViewModel.InstructionsViewerState.Data -> {
             InstructionsViewerScreenContent(
                 report = value.result,
+                hasInstructionError = value.hasInstructionsError,
                 modifier = modifier,
                 onBack = onBack,
             )
@@ -95,6 +96,7 @@ fun InstructionsViewerScreen(
         is InstructionsViewerViewModel.InstructionsViewerState.Data -> {
             InstructionsViewerScreenContent(
                 report = value.result,
+                hasInstructionError = value.hasInstructionsError,
                 modifier = modifier,
                 onBack = onBack,
             )
@@ -113,9 +115,15 @@ fun InstructionsViewerScreen(
 @Composable
 private fun InstructionsViewerScreenContent(
     report: InstructionResolution,
+    hasInstructionError: Boolean,
     modifier: Modifier = Modifier,
     onBack: () -> Unit,
 ) {
+    val errorMessage = if (hasInstructionError) {
+        stringResource(R.string.instructions_viewer_status_error, report.steps.size)
+    } else {
+        stringResource(R.string.instructions_viewer_status_success)
+    }
     Column(
         modifier = modifier
             .systemBarsPadding()
@@ -149,6 +157,7 @@ private fun InstructionsViewerScreenContent(
             items = persistentListOf(
                 stringResource(id = R.string.instructions_viewer_info_position) to "${report.finalPosition.x} x ${report.finalPosition.y}",
                 stringResource(id = R.string.instructions_viewer_info_orientation) to "${report.finalOrientation}",
+                stringResource(id = R.string.instructions_viewer_status_title) to errorMessage,
                 stringResource(id = R.string.instructions_viewer_info_final) to report.finalResolution
             )
         )
@@ -305,6 +314,7 @@ private fun InstructionsViewerScreenContentPreview() {
     MarsRoverTheme {
         InstructionsViewerScreenContent(
             report = PreviewMockData.instructionReport,
+            hasInstructionError = true,
             onBack = {})
     }
 }

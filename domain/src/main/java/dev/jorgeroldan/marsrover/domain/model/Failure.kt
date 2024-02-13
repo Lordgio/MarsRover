@@ -8,4 +8,4 @@ sealed class Failure(val message: String) {
     data class UnexpectedFailure(val cause: String): Failure(cause)
 }
 
-data object InstructionFailure
+data class InstructionFailure(val report: InstructionResolution)

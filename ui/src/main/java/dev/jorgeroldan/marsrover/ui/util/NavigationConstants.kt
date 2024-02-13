@@ -11,4 +11,5 @@ object NavigationConstants {
     const val NAV_VIEWER_ROVER_Y_ARG = "roverY"
     const val NAV_VIEWER_DIRECTION_ARG = "direction"
     const val NAV_VIEWER_MOVEMENTS_ARG = "movements"
+    const val DEFAULT_NAV_ARG = "-"
 }

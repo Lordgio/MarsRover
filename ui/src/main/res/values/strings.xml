@@ -15,6 +15,9 @@
     <string name="instructions_viewer_info_orientation">Rover orientation:</string>
     <string name="instructions_viewer_info_movements">Movements:</string>
     <string name="instructions_viewer_info_final">Final position:</string>
+    <string name="instructions_viewer_status_title">Rover final status:</string>
+    <string name="instructions_viewer_status_error">Error! the rover left the field after %1$s movements.</string>
+    <string name="instructions_viewer_status_success">"Success!"</string>
     <string name="instructions_builder_toolbar_title">Instructions builder</string>
     <string name="instructions_builder_field_title">Field size</string>
     <string name="instructions_builder_position_title">Rover position</string>

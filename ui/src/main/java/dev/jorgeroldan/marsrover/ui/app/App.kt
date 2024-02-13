@@ -64,8 +64,11 @@ fun App(
                             x = backStackEntry.arguments?.getString(NavConstants.NAV_VIEWER_ROVER_X_ARG)?.toIntOrNull() ?: 0,
                             y = backStackEntry.arguments?.getString(NavConstants.NAV_VIEWER_ROVER_Y_ARG)?.toIntOrNull() ?: 0,
                         ),
-                        roverDirection = backStackEntry.arguments?.getString(NavConstants.NAV_VIEWER_DIRECTION_ARG)?.toRoverDirection() ?: RoverDirection.NORTH,
-                        encodedMovements = backStackEntry.arguments?.getString(NavConstants.NAV_VIEWER_MOVEMENTS_ARG) ?: "",
+                        roverDirection = backStackEntry.arguments
+                            ?.getString(NavConstants.NAV_VIEWER_DIRECTION_ARG)?.toRoverDirection() ?: RoverDirection.NORTH,
+                        encodedMovements = backStackEntry.arguments
+                            ?.getString(NavConstants.NAV_VIEWER_MOVEMENTS_ARG)
+                            ?.replace(NavConstants.DEFAULT_NAV_ARG, "") ?: "",
                         movements = (backStackEntry.arguments?.getString(NavConstants.NAV_VIEWER_MOVEMENTS_ARG) ?: "").toRoverMovement()
                     )
                     InstructionsViewerScreen(
@@ -79,11 +82,12 @@ fun App(
                         modifier = Modifier.fillMaxSize(),
                         onBack = { navController.popBackStack() },
                         onNavigate = { item ->
+                            val movements = item.encodedMovements.ifEmpty { NavConstants.DEFAULT_NAV_ARG }
                             navController.navigate(
                                 Screens.InstructionsViewerScreen.route +
                                     "/${item.topRightCorner.x}/${item.topRightCorner.y}" +
                                     "/${item.roverPosition.x}/${item.roverPosition.y}" +
-                                    "/${item.roverDirection}/${item.encodedMovements}"
+                                    "/${item.roverDirection}/${movements}"
                             )
                         }
                     )
