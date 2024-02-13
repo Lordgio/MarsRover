@@ -119,7 +119,6 @@ private fun InstructionsBuilderScreenContent(
         MovementSelector(
             currentValue = item.encodedMovements,
             onMovementAdded = { onViewEvent(InstructionsBuilderViewModel.InstructionsBuilderEvents.OnMovementAdded(it))},
-            onMovementRemoved = { onViewEvent(InstructionsBuilderViewModel.InstructionsBuilderEvents.OnMovementRemoved)}
         )
 
         Button(
@@ -278,7 +277,6 @@ private fun MovementSelector(
     currentValue: String,
     modifier: Modifier = Modifier,
     onMovementAdded: (RoverMovement) -> Unit = {},
-    onMovementRemoved: () -> Unit = {}
 ) {
     Card(
         modifier = modifier
