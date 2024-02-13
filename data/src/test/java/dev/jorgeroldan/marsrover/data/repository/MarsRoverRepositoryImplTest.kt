@@ -5,7 +5,7 @@ import arrow.retrofit.adapter.either.networkhandling.CallError
 import arrow.retrofit.adapter.either.networkhandling.HttpError
 import arrow.retrofit.adapter.either.networkhandling.IOError
 import arrow.retrofit.adapter.either.networkhandling.UnexpectedCallError
-import dev.jorgeroldan.marsrover.data.model.Coordinates
+import dev.jorgeroldan.marsrover.data.model.CoordinatesApi
 import dev.jorgeroldan.marsrover.data.model.InstructionApi
 import dev.jorgeroldan.marsrover.data.model.InstructionItemApi
 import dev.jorgeroldan.marsrover.data.remote.MarsRoverApi
@@ -100,7 +100,7 @@ class MarsRoverRepositoryImplTest {
 
     @Test
     fun `getInstruction with api success returns mapped values`() = runTest {
-        val value = InstructionItemApi(Coordinates(0,0), Coordinates(0,0), "A", "B")
+        val value = InstructionItemApi(CoordinatesApi(0,0), CoordinatesApi(0,0), "A", "B")
         marsRoverApi.instructionResponse = Either.Right(value)
 
         val result = repository.getInstruction("testUrl")

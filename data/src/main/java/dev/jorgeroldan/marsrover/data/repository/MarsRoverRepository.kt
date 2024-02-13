@@ -5,11 +5,8 @@ import arrow.retrofit.adapter.either.networkhandling.CallError
 import arrow.retrofit.adapter.either.networkhandling.HttpError
 import arrow.retrofit.adapter.either.networkhandling.IOError
 import arrow.retrofit.adapter.either.networkhandling.UnexpectedCallError
-import dev.jorgeroldan.marsrover.data.model.InstructionItemApi
+import dev.jorgeroldan.marsrover.data.model.toDomainModel
 import dev.jorgeroldan.marsrover.data.remote.MarsRoverApi
-import dev.jorgeroldan.marsrover.domain.mapper.toRoverDirection
-import dev.jorgeroldan.marsrover.domain.mapper.toRoverMovement
-import dev.jorgeroldan.marsrover.domain.model.Coordinates
 import dev.jorgeroldan.marsrover.domain.model.Failure
 import dev.jorgeroldan.marsrover.domain.model.Instruction
 import dev.jorgeroldan.marsrover.domain.model.InstructionItem
@@ -22,7 +19,7 @@ class MarsRoverRepositoryImpl(
     override suspend fun getInstructionsList(): Either<Failure, List<Instruction>> {
 
         return remote.getInstructionsList()
-            .map { it.map { inst -> Instruction(inst.name, inst.urlPath) } }
+            .map { it.map { inst -> inst.toDomainModel() } }
             .mapLeft { error -> error.mapError() }
     }
 
@@ -39,15 +36,5 @@ class MarsRoverRepositoryImpl(
             is IOError -> Failure.IOFailure(this.cause.message ?: "")
             is UnexpectedCallError -> Failure.UnexpectedFailure(this.cause.message ?: "")
         }
-    }
-
-    private fun InstructionItemApi.toDomainModel(): InstructionItem {
-        return InstructionItem(
-            topRightCorner = Coordinates(topRightCorner.x, topRightCorner.y),
-            roverPosition = Coordinates(roverPosition.x, roverPosition.y),
-            roverDirection = roverDirection.toRoverDirection(),
-            encodedMovements = movements,
-            movements = movements.toRoverMovement(),
-        )
     }
 }
