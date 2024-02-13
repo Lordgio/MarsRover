@@ -23,16 +23,17 @@ class SelectInstructionsViewModelTest {
     private val savedStateHandle = SavedStateHandle()
     private val useCase = GetInstructionListUseCaseFake()
     private lateinit var viewModel: SelectInstructionsViewModel
+    private val defaultDispatcher = StandardTestDispatcher()
 
     @Before
     fun setup() {
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(defaultDispatcher)
     }
 
     @Test
     fun `init viewmodel with usecase error configs proper states`() = runTest {
         useCase.useCaseResponse = Either.Left(Failure.UnexpectedFailure(""))
-        viewModel = SelectInstructionsViewModel(savedStateHandle, useCase)
+        viewModel = SelectInstructionsViewModel(savedStateHandle, useCase, defaultDispatcher)
         viewModel.state.test {
             delay(100)
             val item = expectMostRecentItem()
@@ -44,7 +45,7 @@ class SelectInstructionsViewModelTest {
     @Test
     fun `init viewmodel with usecase success configs proper states`() = runTest {
         useCase.useCaseResponse = Either.Right(listOf())
-        viewModel = SelectInstructionsViewModel(savedStateHandle, useCase)
+        viewModel = SelectInstructionsViewModel(savedStateHandle, useCase, defaultDispatcher)
         viewModel.state.test {
             delay(100)
             val item = expectMostRecentItem()

@@ -31,16 +31,17 @@ class InstructionsViewerViewModelTest {
     private val useCase = GetInstructionUseCaseFake()
     private val resourcesProvider = ResourcesProviderFake()
     private lateinit var viewModel: InstructionsViewerViewModel
+    private val defaultDispatcher = StandardTestDispatcher()
 
     @Before
     fun setup() {
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(defaultDispatcher)
     }
 
     @Test
     fun `init viewmodel with usecase error configs proper states`() = runTest {
         useCase.useCaseResponse = Either.Left(Failure.UnexpectedFailure(""))
-        viewModel = InstructionsViewerViewModel(savedStateHandle, resourcesProvider, useCase)
+        viewModel = InstructionsViewerViewModel(savedStateHandle, resourcesProvider, useCase, defaultDispatcher)
         val collector = launch(UnconfinedTestDispatcher(testScheduler)) {
             var expectedState: InstructionsViewerViewModel.InstructionsViewerState = InstructionsViewerViewModel.InstructionsViewerState.Idle
             viewModel.state.collect { state ->
@@ -71,8 +72,9 @@ class InstructionsViewerViewModelTest {
     fun `init viewmodel with instruction error configs proper states`() = runTest {
         val response = InstructionItem(Coordinates(5, 5), Coordinates(0,0), RoverDirection.WEST, "M", listOf(RoverMovement.MOVE))
         useCase.useCaseResponse = Either.Right(response)
-        viewModel = InstructionsViewerViewModel(savedStateHandle, resourcesProvider, useCase)
-        val collector = launch(UnconfinedTestDispatcher(testScheduler)) {
+        val report = InstructionResolution(response, Coordinates(0,0), RoverDirection.WEST, "0 0 W", listOf())
+        viewModel = InstructionsViewerViewModel(savedStateHandle, resourcesProvider, useCase, defaultDispatcher)
+        val collector = launch(defaultDispatcher) {
             var expectedState: InstructionsViewerViewModel.InstructionsViewerState = InstructionsViewerViewModel.InstructionsViewerState.Idle
             viewModel.state.collect { state ->
                 when(state) {
@@ -82,14 +84,14 @@ class InstructionsViewerViewModelTest {
                     }
                     InstructionsViewerViewModel.InstructionsViewerState.Loading -> {
                         Assert.assertEquals(expectedState, state)
-                        expectedState = InstructionsViewerViewModel.InstructionsViewerState.Error
+                        expectedState = InstructionsViewerViewModel.InstructionsViewerState.Data(true, report)
                     }
                     is InstructionsViewerViewModel.InstructionsViewerState.Data -> {
                         Assert.assertEquals(expectedState, state)
+                        this.cancel()
                     }
                     InstructionsViewerViewModel.InstructionsViewerState.Error -> {
                         Assert.assertEquals(expectedState, state)
-                        this.cancel()
                     }
                 }
             }
@@ -104,8 +106,8 @@ class InstructionsViewerViewModelTest {
         val firstStep = MovementStep(Coordinates(0,0), RoverDirection.NORTH, Coordinates(0,0), RoverDirection.NORTH, RoverMovement.MOVE, "")
         val report = InstructionResolution(response, Coordinates(0,0), RoverDirection.NORTH, "0 0 N", listOf(firstStep))
         useCase.useCaseResponse = Either.Right(response)
-        viewModel = InstructionsViewerViewModel(savedStateHandle, resourcesProvider, useCase)
-        val collector = launch(UnconfinedTestDispatcher(testScheduler)) {
+        viewModel = InstructionsViewerViewModel(savedStateHandle, resourcesProvider, useCase, defaultDispatcher)
+        val collector = launch(defaultDispatcher) {
             var expectedState: InstructionsViewerViewModel.InstructionsViewerState = InstructionsViewerViewModel.InstructionsViewerState.Idle
             viewModel.state.collect { state ->
                 when(state) {
@@ -115,7 +117,7 @@ class InstructionsViewerViewModelTest {
                     }
                     InstructionsViewerViewModel.InstructionsViewerState.Loading -> {
                         Assert.assertEquals(expectedState, state)
-                        expectedState = InstructionsViewerViewModel.InstructionsViewerState.Data(report)
+                        expectedState = InstructionsViewerViewModel.InstructionsViewerState.Data(false, report)
                     }
                     is InstructionsViewerViewModel.InstructionsViewerState.Data -> {
                         Assert.assertEquals(expectedState, state)

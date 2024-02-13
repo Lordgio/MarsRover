@@ -62,7 +62,7 @@ class InstructionsViewerScreenTest {
         val response = InstructionItem(Coordinates(5, 5), Coordinates(0,0), RoverDirection.NORTH, "", listOf())
         val firstStep = MovementStep(Coordinates(0,0), RoverDirection.NORTH, Coordinates(0,0), RoverDirection.NORTH, RoverMovement.MOVE, "")
         val report = InstructionResolution(response, Coordinates(0,0), RoverDirection.NORTH, "0 0 N", listOf(firstStep))
-        every { viewModel.state.value } returns InstructionsViewerViewModel.InstructionsViewerState.Data(report)
+        every { viewModel.state.value } returns InstructionsViewerViewModel.InstructionsViewerState.Data(false, report)
 
         composeTestRule.setContent {
             MarsRoverTheme {
