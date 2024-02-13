@@ -154,8 +154,8 @@ private fun InstructionsViewerScreenContent(
         )
         if (report.steps.isNotEmpty()) {
             ReplayMovements(
-                columns = report.initial.topRightCorner.y,
-                rows = report.initial.topRightCorner.x,
+                columns = report.initial.topRightCorner.x,
+                rows = report.initial.topRightCorner.y,
                 movements = report.steps.toImmutableList()
             )
         }
