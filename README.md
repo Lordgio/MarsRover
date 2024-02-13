@@ -53,6 +53,11 @@ con not be recovered or processed.
 | Navigation compose    | The official way of handling navigation in full Compose apps.                                |
 | Compose Lint checks   | A group of lint checks that help creating composable functions without mistakes.             |
 
+> [!IMPORTANT]
+> Important information: Android Studio Stable (Hedgehog 2023.1.1) doesn't include yet support for rendering Compose 
+> layout previews when you target API 34. Because of this issue, most of the previews will fail to render in this Android
+> Studio version until Google releases the next versions. 
+ 
 ## Best practices applied
 
 As small as this app is, it showcases a number of best practices considered the standard for Android development currently.
